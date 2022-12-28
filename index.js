@@ -39,14 +39,6 @@ for (const file of eventFiles) {
 	}
 }
 
-client.on('messageCreate', async message => {
-	const contenet = new MessageContent(
-		message.channelId,
-		message.author.id,
-		message.content,
-		message.createdTimestamp
-	)
-})
 
 // Login to Discord with your client's token
 client.login(token);
