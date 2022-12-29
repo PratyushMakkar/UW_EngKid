@@ -2,8 +2,10 @@ const fs = require("node:fs");
 const path = require("node:path");
 // Require the necessary discord.js classes
 const { Client, GatewayIntentBits, Collection } = require("discord.js");
+
 // require("dotenv").config();
 const { token } = require("./config.json");
+const { sequelize } = require('./sequelize/SequelConfig');
 
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
