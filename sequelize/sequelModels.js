@@ -27,7 +27,6 @@ BotChannels.init(
 BotMessages.init(
     {
         MessageChannelID: {
-            primaryKey: true,
             type: DataTypes.TEXT,
             allowNull: false
         },
@@ -48,12 +47,11 @@ BotMessages.init(
         tableName: "BotMessages"
     },
     
-)
+).removeAttribute('id')
 
 BotServers.init(
     {
         ServerID: {
-            primaryKey: true,
             type: DataTypes.TEXT,
             allowNull: false
         },

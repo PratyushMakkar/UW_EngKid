@@ -1,43 +1,114 @@
-const {MessageContent} = require('../Models/MessageContent');
+const {MessageContent, ChannelContent, ServerContent} = require('../Models/MessageContent');
+const { sequelize } = require('./SequelConfig');
 const { BotMessages, BotServers, BotChannels } = require('./sequelModels');
 
-async function ChannelIDExistsInServer(channelID_, severID_) {
-    return false;
-}
 
 async function InsertMessageIntoDatabase(messageContent) {
-    const message = await BotMessages.create({
+    await InsertChannelIDIntoServer(messageContent.channelID, messageContent.guildID);
+
+    var message = await BotMessages.create({
         MessageChannelID: messageContent.channelID,
         MessageAuthorID: messageContent.author,
         MessageContent: messageContent.contentText
     });
-    return message.dataValues
+
+    const content = new MessageContent(
+        message.dataValues.MessageChannelID,
+        message.dataValues.MessageAuthorID,
+        message.dataValues.MessageContent,
+        message.dataValues.MessageTimestamp
+    )
+    return content
 }
 
-function SearchMessageWithinDatabase(channelID, Author) {
-    return {}
+async function SearchMessageWithinDatabase(channelID_, author_) {
+    var results = await BotMessages.findAll(
+        {
+            'where': {
+                MessageChannelID: channelID_,
+                MessageAuthorID: author_
+            }
+        }
+    )
+
+    var ReturnValues = [];
+    results.forEach(
+        (element, index) => {
+            const content = new MessageContent(
+                element.dataValues.MessageChannelID,
+                element.dataValues.MessageAuthorID,
+                element.dataValues.MessageContent,
+                element.dataValues.MessageTimestamp
+            )
+            ReturnValues[results.length - (index + 1 )] = content
+        }
+    )
+    return ReturnValues
 }
 
 async function InsertChannelIDIntoServer(channelID_, serverID_) {
-    if (ChannelIDExistsInServer(channelID_, serverID_)) return;
+    var result = await BotChannels.findOrCreate(
+        {
+            'where': {
+                ServerID: serverID_,
+                MessageChannelID: channelID_
+            }
+        }
+    )
+
+    var BotChannelJSON = result[0].dataValues
+    return new ChannelContent(
+        BotChannelJSON.ServerID,
+        BotChannelJSON.MessageChannelID
+    );
+}
+
+async function GetChannelIDFromServer(serverID_) {
+    const results = await BotChannels.findAll(
+        {
+            'where': {
+                serverID: serverID_
+            }
+        }
+    )
+
+    var ReturnValues = [];
+    results.forEach(
+        (element, index) => {
+            const content = new ChannelContent(
+                element.dataValues.ServerID,
+                element.dataValues.MessageChannelID
+            )
+            ReturnValues[results.length - (index + 1 )] = content
+        }
+    )
+    return ReturnValues;
+}
+
+async function JoinServer(serverID_, serverName_) {
+   const results = await BotServers.create(
+        {
+            serverID: serverID_,
+            serverName: serverName_
+        }
+    )
     
-    const message = await BotChannels.create({
-        ServerID: serverID_,
-        MessageChannelID: channelID_
-    });
-    return message.dataValues
+    var BotServerJSON = results[0].dataValues
+    return new ServerContent(
+        BotServerJSON.ServerID,
+        BotServerJSON.ServerName,
+        BotServerJSON.DateJoined
+    )
 }
 
-function GetChannelIDFromServer(serverID) {
-
+async function ClearAllTables() {
+    await BotChannels.sync({force: true });
+    await BotServers.sync({force: true });
+    await BotMessages.sync({force: true });
 }
 
-function JoinServer(serverID, serverName) {
-   
-}
-
-function ClearAllTables() {
-
+async function CloseConnection() {
+    sequelize.close()
 }
 
 module.exports = {
@@ -46,5 +117,6 @@ module.exports = {
     JoinServer,
     ClearAllTables,
     GetChannelIDFromServer,
-    SearchMessageWithinDatabase
+    SearchMessageWithinDatabase,
+    CloseConnection
 }
