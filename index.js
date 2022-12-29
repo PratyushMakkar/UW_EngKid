@@ -5,7 +5,6 @@ const { Client, GatewayIntentBits, Collection } = require("discord.js");
 
 // require("dotenv").config();
 const { token } = require("./config.json");
-const { sequelize } = require('./sequelize/SequelConfig');
 
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
