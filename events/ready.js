@@ -1,4 +1,5 @@
 const { database_url } = require("../config.json");
+const { sequelize } = require("../sequelize/SequelConfig.js");
 
 module.exports = {
   name: "ready",
@@ -9,8 +10,8 @@ module.exports = {
     // connecting to database
     console.log("connecting to database");
     try {
-      sequelize.authenticate();
-      sequelize.sync();
+      await sequelize.authenticate();
+      await sequelize.sync();
       console.log("Connection has been established successfully.");
     } catch (error) {
       console.error("Unable to connect to the database:", error);
