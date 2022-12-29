@@ -23,6 +23,18 @@ describe('Ensuring that all messages are added into the server', () => {
             expect(result.at(0)).toStrictEqual(messageResult);
         })
 
+        test('Test to determine if duplicate channelIDs are inserted into BotChannels', async () => {
+
+        })
+
+        test("Test to determine if the JoinServerFunction functions", async () => {
+
+        })
+
+        test("Test to determine if all ChannelIDs can be found from a server", async () => {
+            
+        })
+
         afterAll(async () => {
             await ClearAllTables();
             await CloseConnection();
