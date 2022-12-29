@@ -1,6 +1,6 @@
 const { time } = require("discord.js");
 
-export class MessageContent {
+class MessageContent {
     constructor(channelID, author, contentText, timestamp) {
         this.channelID = channelID;
         this.author = author;
@@ -8,3 +8,5 @@ export class MessageContent {
         this.timestamp = timestamp; 
     }
 }
+
+module.exports = { MessageContent }

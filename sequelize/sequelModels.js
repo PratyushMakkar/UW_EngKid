@@ -1,5 +1,5 @@
 const { Sequelize, DataTypes, Model } = require('sequelize');
-import { sequelize } from './SequelConfig';
+const {sequelize} = require('./SequelConfig');
 
 class BotChannels extends Model{}
 class BotMessages extends Model{}
@@ -12,19 +12,22 @@ BotChannels.init(
             allowNull: false
         },
         MessageChannelID: {
+            primaryKey: true,
             type: DataTypes.TEXT,
             allowNull: false
         }
     }, 
-    {
+    {   
+        timestamps: false,
+        sequelize: sequelize,
         tableName: 'BotChannels'
     }, 
-    {sequelize}
 )
 
 BotMessages.init(
     {
         MessageChannelID: {
+            primaryKey: true,
             type: DataTypes.TEXT,
             allowNull: false
         },
@@ -36,20 +39,21 @@ BotMessages.init(
             type: DataTypes.TEXT,
             allowNull: false
         },
-        MessageTimestamp: {
-            type: DataTypes.TEXT,
-            allowNull: false
-        },
     }, 
-    {
+    {   
+        timestamps: true,
+        createdAt: 'MessageTimestamp',
+        updatedAt: false,
+        sequelize: sequelize,
         tableName: "BotMessages"
     },
-    {sequelize}
+    
 )
 
 BotServers.init(
     {
         ServerID: {
+            primaryKey: true,
             type: DataTypes.TEXT,
             allowNull: false
         },
@@ -57,13 +61,18 @@ BotServers.init(
             type: DataTypes.TEXT,
             allowNull: false
         },
-        DateJoined: {
-            type: DataTypes.TEXT,
-            allowNull: false
-        },
     }, 
     {
+        createdAt: 'DateJoined',
+        timestamps: true,
+        updatedAt: false,
+        sequelize: sequelize,
         tableName: "BotServers"
     },
-    {sequelize}
 )
+
+module.exports = {
+    BotChannels,
+    BotServers,
+    BotMessages
+}
