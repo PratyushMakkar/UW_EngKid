@@ -64,35 +64,59 @@ async function InsertChannelIDIntoServer(channelID_, serverID_) {
 }
 
 async function GetChannelIDFromServer(serverID_) {
-  const results = await BotChannels.findAll({
-    where: {
-      serverID: serverID_,
-    },
-  });
+    var results = [];
+    try {
+        results = await BotChannels.findAll({
+            where: {
+              ServerID: serverID_,
+            },
+        });
+    } catch (err) {
+        console.log(err)
+    }
 
-  var ReturnValues = [];
-  results.forEach((element, index) => {
-    const content = new ChannelContent(
-      element.dataValues.ServerID,
-      element.dataValues.MessageChannelID
-    );
-    ReturnValues[results.length - (index + 1)] = content;
-  });
-  return ReturnValues;
+    var ReturnValues = [];
+    results.forEach((element, index) => {
+        const content = new ChannelContent(
+            element.dataValues.ServerID,
+            element.dataValues.MessageChannelID
+        );
+        ReturnValues[index] = content;
+    });
+    return ReturnValues;
 }
 
 async function JoinServer(serverID_, serverName_) {
   const results = await BotServers.create({
-    serverID: serverID_,
-    serverName: serverName_,
+    ServerID: serverID_,
+    ServerName: serverName_,
   });
 
-  var BotServerJSON = results[0].dataValues;
+  var BotServerJSON = results.dataValues;
   return new ServerContent(
     BotServerJSON.ServerID,
     BotServerJSON.ServerName,
     BotServerJSON.DateJoined
   );
+}
+
+async function SearchServer(serverName_) {
+    const results = await BotServers.findAll({
+        where: {
+            ServerName: serverName_
+        },
+    })
+
+    var ReturnValues = [];
+    results.forEach((element, index) => {
+        const content = new ServerContent(
+            element.dataValues.ServerID,
+            element.dataValues.ServerName,
+            element.dataValues.DateJoined
+        );
+        ReturnValues[results.length - (index + 1)] = content;
+    });
+    return ReturnValues;
 }
 
 async function ClearAllTables() {
@@ -112,5 +136,6 @@ module.exports = {
   ClearAllTables,
   GetChannelIDFromServer,
   SearchMessageWithinDatabase,
+  SearchServer,
   CloseConnection,
 };

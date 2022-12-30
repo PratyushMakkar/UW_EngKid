@@ -1,7 +1,7 @@
 module.exports = {
 	name: "messageCreate",
 	async execute(message) {
-		const contenet = new MessageContent(
+		const content = new MessageContent(
             message.channelId,
             message.author.id,
             message.content,
