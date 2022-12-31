@@ -1,43 +1,40 @@
+const { default: axios } = require("axios");
 const { SlashCommandBuilder } = require("discord.js");
 const { API_URL } = require("../config.json");
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("wordcloud")
-    .setDescription("Everything about wordclouds"),
+    .setDescription("Everything about wordclouds")
+    .addStringOption((option) =>
+      option
+        .setRequired(true)
+        .setName("data")
+        .setDescription("generation string for word cloud")
+    ),
   async execute(interaction) {
-    const options = {
-      url: API_URL + "/wordcloud",
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        text: "some testing words to generate a random word cloud",
-      }),
-    };
-
     // defer reply in case of cold start
-    interaction.deferReply();
+    await interaction.deferReply();
+
     try {
       await axios
         .post(API_URL.concat("/wordcloud"), {
-          text: "some testing words to generate a random word cloud",
+          text: interaction.options.getString("data"),
+          settings: {},
         })
         .then(async function (response) {
           await interaction.editReply({
             files: [
               {
-                name: "wordcloud.jpeg",
-                attachment: Buffer.from(response["data"], "base64"),
+                name: "image.jpeg",
+                attachment: Buffer.from(response["data"]["body"], "base64"),
               },
             ],
           });
         });
-      console.log(response);
     } catch (error) {
       console.log(error);
-      interaction.reply("oops something went wrong");
+      await interaction.editReply("oops something went wrong");
     }
   },
 };
