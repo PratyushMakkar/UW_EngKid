@@ -1,0 +1,18 @@
+{
+  "include": [],
+  "exclude": [],
+  "venvPath": "/Users/lefan/Programming/engkid/serverless/venvs/",
+  "venv": "wordcloud-venv",
+  "typingsPath": "./typestubs",
+  "reportTypeshedErrors": false,
+  "reportMissingImports": true,
+  "reportMissingTypeStubs": false,
+  "executionEnvironments": [
+    {
+      "root": "./",
+      "extraPaths": [
+        "./3rd-modules"
+      ]
+    }
+  ]
+}
