@@ -1,6 +1,6 @@
 from io import BytesIO
-from wordcloud import WordCloud
 import base64
+from wordcloud import WordCloud
 
 
 def lambda_handler(event, context):
@@ -9,6 +9,8 @@ def lambda_handler(event, context):
 
     # generation
     wordcloud = WordCloud(
+        width=1080,
+        height=1080
         # max_words=settings["max"],
         # mask=settings["mask"],
         # stopwords=settings["stopwords"],

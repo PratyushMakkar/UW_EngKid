@@ -5,5 +5,7 @@
 
 *.zip
 /*venv*
+
+# lambda function packages
 /package
 /generate-wordcloud
