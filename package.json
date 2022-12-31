@@ -19,6 +19,7 @@
   "homepage": "https://github.com/PratyushMakkar/UW_EngKid#readme",
   "dependencies": {
     "@discordjs/rest": "^1.5.0",
+    "axios": "^1.2.2",
     "discord-api-types": "^0.37.24",
     "discord.js": "^14.7.1",
     "pg": "^8.8.0",

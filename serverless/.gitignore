@@ -5,4 +5,5 @@
 
 *.zip
 /*venv*
-
+/package
+/generate-wordcloud
