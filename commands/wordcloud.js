@@ -51,9 +51,11 @@ module.exports = {
             .awaitMessages({ filter, max: 1, time: 30000, errors: ["time"] })
             .then((collected) => {
               // load url into settings
+              // console.log(collected.first().attachments.first().url);
               settings["color-mask"] = collected
                 .first()
                 .attachments.first().url;
+              interaction.followUp("mask received");
             })
             .catch((collected) => {
               console.log(collected);
