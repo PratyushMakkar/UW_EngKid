@@ -34,8 +34,23 @@ module.exports = {
     .addNumberOption((option) =>
       option.setName("max_words").setDescription("max words in word gram")
     )
+    .addNumberOption((option) =>
+      option
+        .setName("max_font_size")
+        .setDescription("sets the max font size of cloud")
+    )
+    .addNumberOption((option) =>
+      option
+        .setName("min_font_size")
+        .setDescription("sets the min font size of cloud")
+    )
     .addStringOption((option) =>
       option.setName("background_color").setDescription("background color")
+    )
+    .addStringOption((option) =>
+      option
+        .setName("contour_color")
+        .setDescription("choose color to draw around")
     ),
   async execute(interaction) {
     // defer reply in case of cold start
@@ -110,6 +125,7 @@ module.exports = {
           headers: headers,
         })
         .then(async function (response) {
+          // console.log(response);
           await interaction.editReply({
             files: [
               {
