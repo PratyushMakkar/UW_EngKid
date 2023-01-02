@@ -18,7 +18,10 @@ def lambda_handler(event, context):
         settings["mask"] = image_mask
         # wc = WordCloud(mask=image_mask, repeat=settings["repeat"]).generate(text)
 
-    wc = WordCloud(**settings).generate(text)
+    if "frequencies" in event:
+        wc = WordCloud(**settings).generate_from_frequencies(event["frequencies"])
+    else:
+        wc = WordCloud(**settings).generate(text)
 
     if "mask" in settings:
         image_colors = ImageColorGenerator(image_mask)
