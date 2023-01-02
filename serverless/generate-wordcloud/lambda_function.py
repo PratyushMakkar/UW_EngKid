@@ -9,27 +9,20 @@ import requests
 def lambda_handler(event, context):
     text = event["text"]
     settings = event["settings"]
+    img = image_mask = None
 
     # color mask
-    if settings["color-mask"] is not None:
-        img = Image.open(requests.get(settings["color-mask"], stream=True).raw)
+    if "mask" in settings:
+        img = Image.open(requests.get(settings["mask"], stream=True).raw)
         image_mask = np.array(img)
-        image_colors = ImageColorGenerator(image_mask)
+        settings["mask"] = image_mask
+        # wc = WordCloud(mask=image_mask, repeat=settings["repeat"]).generate(text)
 
-        wc = WordCloud(mask=image_mask, repeat=settings['repeat']).generate(text)
+    wc = WordCloud(**settings).generate(text)
+
+    if "mask" in settings:
+        image_colors = ImageColorGenerator(image_mask)
         wc.recolor(color_func=image_colors)
-    else:
-        # generation
-        wc = WordCloud(
-            # width=1920,
-            # height=1080,
-            repeat=True
-            # max_words=settings["max"],
-            # mask=settings["mask"],
-            # stopwords=settings["stopwords"],
-            # margin=settings["margin"],
-            # random_state=settings["random_state"],
-        ).generate(text)
 
     # to base64
     img = wc.to_image()

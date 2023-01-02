@@ -17,22 +17,41 @@ module.exports = {
     )
     .addBooleanOption((option) =>
       option
-        .setName("color-mask")
+        .setName("mask")
         .setDescription(
           "whether or not a colored mask will be used to generate your word cloud"
         )
+    )
+    .addNumberOption((option) =>
+      option.setName("width").setDescription("pixel width of cloud")
+    )
+    .addNumberOption((option) =>
+      option.setName("height").setDescription("pixel height of cloud")
+    )
+    .addNumberOption((option) =>
+      option.setName("contour_width").setDescription("width of contour lines")
+    )
+    .addNumberOption((option) =>
+      option.setName("max_words").setDescription("max words in word gram")
+    )
+    .addStringOption((option) =>
+      option.setName("background_color").setDescription("background color")
     ),
   async execute(interaction) {
     // defer reply in case of cold start
     await interaction.deferReply();
 
-    const settings = {
-      // stopwords: interaction.options.getString
-      repeat: interaction.options.getBoolean("repeat"),
-    };
+    const settings = {};
+
+    // console.log(interaction.options.data);
+    interaction.options.data.forEach((option) => {
+      if (option["name"] !== "data") {
+        settings[option["name"]] = option["value"];
+      }
+    });
 
     // parsing some  option logic
-    if (interaction.options.getBoolean("color-mask")) {
+    if (interaction.options.getBoolean("mask")) {
       const filter = (message) => {
         let match = true;
         if (message.author.id !== interaction.user.id) match = false;
@@ -52,9 +71,7 @@ module.exports = {
             .then((collected) => {
               // load url into settings
               // console.log(collected.first().attachments.first().url);
-              settings["color-mask"] = collected
-                .first()
-                .attachments.first().url;
+              settings["mask"] = collected.first().attachments.first().url;
               interaction.followUp("mask received");
             })
             .catch((collected) => {
