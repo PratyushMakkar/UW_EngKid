@@ -12,7 +12,6 @@ BotChannels.init(
       allowNull: false,
     },
     MessageChannelID: {
-      primaryKey: true,
       type: DataTypes.TEXT,
       allowNull: false,
     },
@@ -22,7 +21,7 @@ BotChannels.init(
     sequelize: sequelize,
     tableName: "BotChannels",
   }
-);
+).removeAttribute("id");
 
 BotMessages.init(
   {
