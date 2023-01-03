@@ -125,6 +125,7 @@ module.exports = {
           headers: headers,
         })
         .then(async function (response) {
+          // console.log(response);
           await interaction.editReply({
             files: [
               {
